@@ -5,6 +5,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import com.myspace.mortgage_app.Applicant;
+import com.myspace.mortgage_app.Application;
+import com.myspace.mortgage_app.Property;
+import org.kie.server.api.KieServerConstants;
 import org.kie.server.api.marshalling.MarshallingFormat;
 import org.kie.server.client.CredentialsProvider;
 import org.kie.server.client.KieServicesClient;
@@ -29,25 +33,19 @@ public class Main {
 	private static final String PASSWORD = "kieserver1!";
 
 	// We use the container 'alias' instead of container name to decouple the client from the KIE-Contianer deployments.
-	private static final String CONTAINER_ID = "mortgage";
+	private static final String CONTAINER_ID = "mortgage-process_1.0.0-SNAPSHOT";
 
-	private static final String PROCESS_ID = "com.redhat.bpms.examples.mortgage.MortgageApplication";
+	private static final String PROCESS_ID = "Mortgage_Process.MortgageApprovalProcess";
 
 	public static void main(String[] args) {
+
+		System.setProperty(KieServerConstants.SYSTEM_XSTREAM_ENABLED_PACKAGES, "org.redhat.**");
 
 		CredentialsProvider credentialsProvider = new EnteredCredentialsProvider(USERNAME, PASSWORD);
 
 		KieServicesConfiguration kieServicesConfig = KieServicesFactory.newRestConfiguration(KIE_SERVER_URL, credentialsProvider);
 
-		// Adding classes that our client uses to our Marshaler.
-		Set<Class<?>> extraClasses = new HashSet<>();
-		extraClasses.add(Application.class);
-		extraClasses.add(Applicant.class);
-		extraClasses.add(Property.class);
-		kieServicesConfig.addExtraClasses(extraClasses);
-
-		// Set the Marshaling Format to JSON. Other options are JAXB and XSTREAM
-		kieServicesConfig.setMarshallingFormat(MarshallingFormat.JSON);
+		kieServicesConfig.setMarshallingFormat(MarshallingFormat.XSTREAM);
 
 		KieServicesClient kieServicesClient = KieServicesFactory.newKieServicesClient(kieServicesConfig);
 
@@ -67,7 +65,6 @@ public class Main {
 		Application application = new Application();
 		application.setApplicant(getApplicant());
 		application.setProperty(getProperty());
-		application.setDownPayment(10000);
 		application.setAmortization(10);
 		return application;
 	}
@@ -75,8 +72,6 @@ public class Main {
 	private static Applicant getApplicant() {
 		Applicant applicant = new Applicant();
 		applicant.setName("ddoyle");
-		applicant.setCreditScore(450);
-		applicant.setIncome(70000);
 		applicant.setSsn(987654321);
 		return applicant;
 	}
@@ -84,7 +79,6 @@ public class Main {
 	private static Property getProperty() {
 		Property property = new Property();
 		property.setAddress("Rotterdam");
-		property.setPrice(240000);
 		return property;
 	}
 

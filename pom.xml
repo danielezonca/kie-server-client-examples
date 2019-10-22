@@ -6,7 +6,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<properties>
 		<!-- Properties required by vertx-maven-plugin -->
-		<version.org.kie>7.12.0.Final</version.org.kie>
+		<version.org.kie>7.28.0.Final</version.org.kie>
 		<version.ch.qos.logback>1.2.3</version.ch.qos.logback>
 	</properties>
 	<dependencies>
@@ -17,6 +17,12 @@
 			<artifactId>kie-server-client</artifactId>
 			<version>${version.org.kie}</version>
 			<scope>compile</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>mortgage-process</groupId>
+			<artifactId>mortgage-process</artifactId>
+			<version>1.0.0-SNAPSHOT</version>
 		</dependency>
 	
 	</dependencies>
